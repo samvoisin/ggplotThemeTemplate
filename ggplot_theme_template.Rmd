@@ -10,6 +10,7 @@ output: html_document
 ```{r template, echo = TRUE}
 
 library(tidyverse)
+library(gridExtra)
 
 ### Master Plot Format ###
 
@@ -85,10 +86,10 @@ simFrame <- data_frame(
 ) %>% mutate(M = factor(M))
 
 # without using the template
-withoutFmt <- ggplot(data = simFrame,
-                     aes(x = S,
-                         y = A,
-                         color = M))  +
+withoutFmtScatter <- ggplot(data = simFrame,
+                            aes(x = S,
+                                y = A,
+                                color = M))  +
   geom_point(size = 2)  +
   geom_jitter()         + 
   ggtitle("Test Title") +
@@ -96,10 +97,10 @@ withoutFmt <- ggplot(data = simFrame,
        y = "Poisson Distributed")
 
 # using the template
-withFmt <- ggplot(data = simFrame,
-                  aes(x = S,
-                      y = A,
-                      color = M))  +
+withFmtScatter <- ggplot(data = simFrame,
+                         aes(x = S,
+                             y = A,
+                             color = M))  +
   geom_point(size = 2)  +
   geom_jitter()         + 
   ggtitle("Test Title") +
@@ -109,24 +110,24 @@ withFmt <- ggplot(data = simFrame,
 
 # without using the template - faceted
 withoutFmtFacet <- ggplot(data = simFrame,
-                     aes(x = S,
-                         y = A,
-                         color = M))  +
+                          aes(x = S,
+                              y = A,
+                              color = M))  +
   geom_point(size = 2)  +
   geom_jitter()         + 
-  facet_wrap(M~.)        +
+  facet_wrap(M~.)       +
   ggtitle("Test Title") +
   labs(x = "Normally Distributed",
        y = "Poisson Distributed")
 
 # using the template - faceted
 withFmtFacet <- ggplot(data = simFrame,
-                  aes(x = S,
-                      y = A,
-                      color = M))  +
+                       aes(x = S,
+                           y = A,
+                           color = M))  +
   geom_point(size = 2)  +
   geom_jitter()         + 
-  facet_wrap(M~.)        +
+  facet_wrap(M~.)       +
   ggtitle("Test Title") +
   labs(x = "Normally Distributed",
        y = "Poisson Distributed") +
@@ -140,27 +141,38 @@ withFmtFacet <- ggplot(data = simFrame,
 
 ```{r scatterExample, echo = TRUE}
 
-gridExtra::grid.arrange(withoutFmt,
-                        withFmt,
-                        nrow = 1,
-                        ncol = 2)
+grid.arrange(withoutFmtScatter,
+             withFmtScatter,
+             nrow = 1,
+             ncol = 2)
 
 ```
 
-#### This is the same template applied to a faceted scatter plot. This time the base ggplot is on the top while the formatted version is on the bottom.
+#### This is the same template applied to a faceted scatter plot.
 
 ```{r facetExample, echo = TRUE}
 
-gridExtra::grid.arrange(withoutFmtFacet,
-                        withFmtFacet,
-                        nrow = 1,
-                        ncol = 2)
+grid.arrange(withoutFmtFacet,
+             withFmtFacet,
+             nrow = 1,
+             ncol = 2)
 
 ```
 
+#### Make theme changes in the same way you would normally. Additions overwrite the template themes. Below is the previous scatter plot with an additional theme object added to change the color of the plot title and axis titles. Notice that the plot title changed color, but the axis labels did not. This is because the master template specifies the colors of each title explicitly. See the final graph for an example.
 
+```{r Modify, echo = TRUE}
 
+withFmtScatter +
+  theme(plot.title = element_text(color = "red"),
+        axis.title = element_text(color  = "blue"))
 
+withFmtScatter +
+  theme(plot.title = element_text(color = "red"),
+        axis.title.x = element_text(color  = "blue"),
+        axis.title.y = element_text(color  = "blue"))
+
+```
 
 
 
