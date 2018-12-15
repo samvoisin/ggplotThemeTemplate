@@ -1,0 +1,181 @@
+---
+title: "Theme Template for ggplot"
+author: "Sam Voisin"
+date: "December 15, 2018"
+output: html_document
+---
+
+## Theme Template for Plotting with ggplot
+
+```{r template, echo = TRUE}
+
+library(tidyverse)
+
+### Master Plot Format ###
+
+master_plot_theme <- theme_light() +
+  theme(
+    # large plot title
+    plot.title   = element_text(color  = "black",
+                                face   = "bold",
+                                size   = 15,
+                                family = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # x axis label
+    axis.title.x = element_text(color  = "black",
+                                face   = "bold",
+                                size   = 12,
+                                family = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # y axis label
+    axis.title.y = element_text(color  = "black",
+                                face   = "bold",
+                                size   = 12,
+                                family = NULL,
+                                angle  = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # x axis tick labels
+    axis.text.x  = element_text(face   = "bold",
+                                color  = "black",
+                                size   = 10,
+                                family = NULL,
+                                angle  = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # y axis tick labels
+    axis.text.y  = element_text(color  = "black",
+                                face   = "bold",
+                                size   = 10,
+                                family = NULL,
+                                angle  = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # text for facet strips
+    strip.text   = element_text(color  = "black",
+                                face   = "bold",
+                                size   = 15,
+                                family = NULL,
+                                hjust  = NULL,
+                                vjust  = NULL),
+    # background for facet strips
+    strip.background = element_rect(color    = "black",
+                                    fill     = "white",
+                                    linetype = "solid"),
+    # major and minor gridlines; can be added back w/ element_line(...)
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position    = "none")
+
+```
+
+
+
+```{r example, echo = TRUE}
+
+# simulate some data
+simFrame <- data_frame(
+  S = rnorm(100),
+  A = rpois(100, lambda = 10),
+  M = rep(c("A", "B"), 50)
+) %>% mutate(M = factor(M))
+
+# without using the template
+withoutFmt <- ggplot(data = simFrame,
+                     aes(x = S,
+                         y = A,
+                         color = M))  +
+  geom_point(size = 2)  +
+  geom_jitter()         + 
+  ggtitle("Test Title") +
+  labs(x = "Normally Distributed",
+       y = "Poisson Distributed")
+
+# using the template
+withFmt <- ggplot(data = simFrame,
+                  aes(x = S,
+                      y = A,
+                      color = M))  +
+  geom_point(size = 2)  +
+  geom_jitter()         + 
+  ggtitle("Test Title") +
+  labs(x = "Normally Distributed",
+       y = "Poisson Distributed") +
+  master_plot_theme
+
+# without using the template - faceted
+withoutFmtFacet <- ggplot(data = simFrame,
+                     aes(x = S,
+                         y = A,
+                         color = M))  +
+  geom_point(size = 2)  +
+  geom_jitter()         + 
+  facet_wrap(M~.)        +
+  ggtitle("Test Title") +
+  labs(x = "Normally Distributed",
+       y = "Poisson Distributed")
+
+# using the template - faceted
+withFmtFacet <- ggplot(data = simFrame,
+                  aes(x = S,
+                      y = A,
+                      color = M))  +
+  geom_point(size = 2)  +
+  geom_jitter()         + 
+  facet_wrap(M~.)        +
+  ggtitle("Test Title") +
+  labs(x = "Normally Distributed",
+       y = "Poisson Distributed") +
+  master_plot_theme
+
+
+
+```
+
+#### Here we can see the effect of the template on a scatter plot. The base ggplot is on the left; the formatted version is on the right.
+
+```{r scatterExample, echo = TRUE}
+
+gridExtra::grid.arrange(withoutFmt,
+                        withFmt,
+                        nrow = 1,
+                        ncol = 2)
+
+```
+
+#### This is the same template applied to a faceted scatter plot. This time the base ggplot is on the top while the formatted version is on the bottom.
+
+```{r facetExample, echo = TRUE}
+
+gridExtra::grid.arrange(withoutFmtFacet,
+                        withFmtFacet,
+                        nrow = 1,
+                        ncol = 2)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
