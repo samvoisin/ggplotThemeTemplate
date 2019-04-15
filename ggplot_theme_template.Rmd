@@ -9,8 +9,8 @@ output: html_document
 
 ```{r template, echo = TRUE}
 
-library(tidyverse)
-library(gridExtra)
+suppressMessages(library(tidyverse))
+suppressMessages(library(gridExtra))
 
 ### Master Plot Format ###
 
